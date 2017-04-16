@@ -2,9 +2,7 @@ const CDP = require('chrome-remote-interface');
 const argv = require('minimist')(process.argv.slice(2));
 const file = require('fs');
 
-//////////////
-// CLI Args //
-//////////////
+// CLI Args
 var url = argv.url || 'https://www.google.com';
 var format = argv.format === 'jpeg' ? 'jpeg' : 'png';
 var viewportWidth = argv.viewportWidth || 1440;
@@ -43,7 +41,7 @@ CDP(async function(client) {
   await Emulation.setDeviceMetricsOverride(deviceMetrics);
   await Emulation.setVisibleSize({width: imgWidth, height: imgHeight});
 
-  // Navigate to target page
+  // Navigate to target page and store frameId for later us
   const {frameId} = await Page.navigate({url});
 
   // Take screenshot after page has loaded.
@@ -66,14 +64,6 @@ CDP(async function(client) {
       });
       const {model: {height}} = await DOM.getBoxModel({nodeId: bodyNodeId});
 
-      // Note: Updating viewport size doesnt work because the page in question
-      // may have something like a 100VH header. Basically, changing the viewport
-      // size can in turn, change the height of the content again
-      // await Emulation.setDeviceMetricsOverride(
-      //  Object.assign({}, deviceMetrics, {height}),
-      // );
-      // await Emulation.setVisibleSize({width: imgWidth, height: height});
-
       await Emulation.setVisibleSize({width: imgWidth, height: height});
       // This forceViewport ensures that content outside the viewport is rendered,
       // otherwise it shows up as grey.
@@ -86,11 +76,10 @@ CDP(async function(client) {
       file.writeFile('output.png', buffer, 'base64', function(err) {
         if (err) {
           console.error(err);
-          client.close();
         } else {
           console.log('Screenshot saved');
-          client.close();
         }
+        client.close();
       });
     }, delay);
   });
