@@ -8,7 +8,7 @@ Contributions are welcome.
 
 ### Setup
 
-The setup below was used on a vagrant running Ubuntu 14 Trusty Tahr
+The setup below was used on a vagrant running Ubuntu 14 Trusty Tahr. It assumes you've already cloned the repo and run `npm install`.
 
 ```sh
 # Install Google Chrome
