@@ -30,7 +30,7 @@ CDP(async function(client) {
     await Network.setUserAgentOverride({userAgent});
   }
 
-  // Set up device resolution, etc.
+  // Set up viewport resolution, etc.
   const deviceMetrics = {
     width: viewportWidth,
     height: viewportHeight,
@@ -41,12 +41,12 @@ CDP(async function(client) {
   await Emulation.setDeviceMetricsOverride(deviceMetrics);
   await Emulation.setVisibleSize({width: imgWidth, height: imgHeight});
 
-  // Navigate to target page and store frameId for later us
+  // Navigate to target page and store frameId for later usage
   const {frameId} = await Page.navigate({url});
 
-  // Take screenshot after page has loaded.
+  // Wait for page load event to take screenshot
   Page.loadEventFired(async () => {
-    // Add a CSS rule that hides scrollbars for screenshot
+    // Add a CSS rule that hides scrollbars in screenshot
     const {styleSheetId} = await CSS.createStyleSheet({frameId: frameId});
     await CSS.addRule({
       styleSheetId: styleSheetId,
@@ -54,8 +54,8 @@ CDP(async function(client) {
       location: {startLine: 0, startColumn: 0, endLine: 0, endColumn: 0},
     });
 
-    // In order to take a screenshot of the full page, we need to measure
-    // its height and update the viewport accordingyl
+    // If the `full` CLI option was passed, we need to measure the height of
+    // the rendered page and use Emulation.setVisibleSize
     if (fullPage) {
       const {root: {nodeId: documentNodeId}} = await DOM.getDocument();
       const {nodeId: bodyNodeId} = await DOM.querySelector({
@@ -65,8 +65,8 @@ CDP(async function(client) {
       const {model: {height}} = await DOM.getBoxModel({nodeId: bodyNodeId});
 
       await Emulation.setVisibleSize({width: imgWidth, height: height});
-      // This forceViewport ensures that content outside the viewport is rendered,
-      // otherwise it shows up as grey.
+      // This forceViewport call ensures that content outside the viewport is
+      // rendered, otherwise it shows up as grey. Possibly a bug?
       await Emulation.forceViewport({x: 0, y: 0, scale: 1});
     }
 
