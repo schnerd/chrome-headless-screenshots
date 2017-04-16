@@ -4,6 +4,8 @@ Chrome 57 enabled headless browser support on Linux (and Chrome 59 will have cro
 
 This repo contains an example implementation of using Chrome as an automated screenshot tool linux, which is a common use case for PhantomJS.
 
+Contributions are welcome.
+
 ### Setup
 
 The setup below was used for a vagrant with Ubuntu 14 Trusty Tahr
