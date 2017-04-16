@@ -4,7 +4,7 @@ Chrome 57 enabled headless browser support on Linux (and Chrome 59 will have cro
 
 This repo contains an example implementation of using Chrome as an automated screenshot tool linux, which is a common use case for PhantomJS.
 
-#### Setup
+### Setup
 
 The setup below was used for a vagrant with Ubuntu 14 Trusty Tahr
 
@@ -29,7 +29,7 @@ google-chrome --headless --remote-debugging-port=9222 --disable-gpu &
 nodejs index.js --url="http://www.eff.org"
 ```
 
-#### Other Resources
+### Other Resources
 
 [Headless Chromium](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md)
 [Chrome Debugging Protocol Viewer](https://chromedevtools.github.io/debugger-protocol-viewer/tot/)
