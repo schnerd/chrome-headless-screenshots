@@ -29,6 +29,8 @@ google-chrome --headless --remote-debugging-port=9222 --disable-gpu &
 nodejs index.js --url="http://www.eff.org"
 ```
 
+The screenshot will then be available as *output.png*
+
 ### Other Resources
 
 - [Headless Chromium](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md)
