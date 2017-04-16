@@ -8,7 +8,7 @@ Contributions are welcome.
 
 ### Setup
 
-The setup below was used for a vagrant with Ubuntu 14 Trusty Tahr
+The setup below was used on a vagrant running Ubuntu 14 Trusty Tahr
 
 ```sh
 # Install Google Chrome
