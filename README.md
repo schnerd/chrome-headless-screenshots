@@ -31,6 +31,6 @@ nodejs index.js --url="http://www.eff.org"
 
 ### Other Resources
 
-[Headless Chromium](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md)
-[Chrome Debugging Protocol Viewer](https://chromedevtools.github.io/debugger-protocol-viewer/tot/)
+- [Headless Chromium](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md)
+- [Chrome Debugging Protocol Viewer](https://chromedevtools.github.io/debugger-protocol-viewer/tot/)
 
