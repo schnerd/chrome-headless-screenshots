@@ -13,6 +13,7 @@ var imgHeight = Math.floor(imgWidth / aspectRatio);
 var delay = argv.delay || 0;
 var userAgent = argv.userAgent;
 var fullPage = argv.full;
+var output = argv.output || 'output.'+format;
 
 // Start the Chrome Debugging Protocol
 CDP(async function(client) {
@@ -73,7 +74,7 @@ CDP(async function(client) {
     setTimeout(async function() {
       const screenshot = await Page.captureScreenshot({format});
       const buffer = new Buffer(screenshot.data, 'base64');
-      file.writeFile('output.png', buffer, 'base64', function(err) {
+      file.writeFile(output, buffer, 'base64', function(err) {
         if (err) {
           console.error(err);
         } else {
