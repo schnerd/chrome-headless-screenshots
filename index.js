@@ -7,9 +7,6 @@ const url = argv.url || 'https://www.google.com';
 const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
 const viewportWidth = argv.viewportWidth || 1440;
 const viewportHeight = argv.viewportHeight || 900;
-const aspectRatio = viewportWidth / viewportHeight;
-const imgWidth = argv.imgWidth || viewportWidth;
-const imgHeight = Math.floor(imgWidth / aspectRatio);
 const delay = argv.delay || 0;
 const userAgent = argv.userAgent;
 const fullPage = argv.full;
@@ -38,7 +35,7 @@ CDP(async function(client) {
     fitWindow: false,
   };
   await Emulation.setDeviceMetricsOverride(deviceMetrics);
-  await Emulation.setVisibleSize({width: imgWidth, height: imgHeight});
+  await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
 
   // Navigate to target page
   await Page.navigate({url});
@@ -55,7 +52,7 @@ CDP(async function(client) {
       });
       const {model: {height}} = await DOM.getBoxModel({nodeId: bodyNodeId});
 
-      await Emulation.setVisibleSize({width: imgWidth, height: height});
+      await Emulation.setVisibleSize({width: viewportWidth, height: height});
       // This forceViewport call ensures that content outside the viewport is
       // rendered, otherwise it shows up as grey. Possibly a bug?
       await Emulation.forceViewport({x: 0, y: 0, scale: 1});
