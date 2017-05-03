@@ -3,26 +3,25 @@ const argv = require('minimist')(process.argv.slice(2));
 const file = require('fs');
 
 // CLI Args
-var url = argv.url || 'https://www.google.com';
-var format = argv.format === 'jpeg' ? 'jpeg' : 'png';
-var viewportWidth = argv.viewportWidth || 1440;
-var viewportHeight = argv.viewportHeight || 900;
-var aspectRatio = viewportWidth / viewportHeight;
-var imgWidth = argv.imgWidth || viewportWidth;
-var imgHeight = Math.floor(imgWidth / aspectRatio);
-var delay = argv.delay || 0;
-var userAgent = argv.userAgent;
-var fullPage = argv.full;
+const url = argv.url || 'https://www.google.com';
+const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
+const viewportWidth = argv.viewportWidth || 1440;
+const viewportHeight = argv.viewportHeight || 900;
+const aspectRatio = viewportWidth / viewportHeight;
+const imgWidth = argv.imgWidth || viewportWidth;
+const imgHeight = Math.floor(imgWidth / aspectRatio);
+const delay = argv.delay || 0;
+const userAgent = argv.userAgent;
+const fullPage = argv.full;
 
 // Start the Chrome Debugging Protocol
 CDP(async function(client) {
   // Extract used DevTools domains.
-  const {CSS, DOM, Emulation, Network, Page, Runtime} = client;
+  const {DOM, Emulation, Network, Page, Runtime} = client;
 
   // Enable events on domains we are interested in.
   await Page.enable();
   await DOM.enable();
-  await CSS.enable();
   await Network.enable();
 
   // If user agent override was specified, pass to Network domain
@@ -41,19 +40,11 @@ CDP(async function(client) {
   await Emulation.setDeviceMetricsOverride(deviceMetrics);
   await Emulation.setVisibleSize({width: imgWidth, height: imgHeight});
 
-  // Navigate to target page and store frameId for later usage
-  const {frameId} = await Page.navigate({url});
+  // Navigate to target page
+  await Page.navigate({url});
 
   // Wait for page load event to take screenshot
   Page.loadEventFired(async () => {
-    // Add a CSS rule that hides scrollbars in screenshot
-    const {styleSheetId} = await CSS.createStyleSheet({frameId: frameId});
-    await CSS.addRule({
-      styleSheetId: styleSheetId,
-      ruleText: '::-webkit-scrollbar { display: none; }',
-      location: {startLine: 0, startColumn: 0, endLine: 0, endColumn: 0},
-    });
-
     // If the `full` CLI option was passed, we need to measure the height of
     // the rendered page and use Emulation.setVisibleSize
     if (fullPage) {
