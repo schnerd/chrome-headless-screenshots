@@ -1,6 +1,7 @@
 const CDP = require('chrome-remote-interface');
 const argv = require('minimist')(process.argv.slice(2));
-const file = require('fs');
+const file = require('mz/fs');
+const timeout = require('delay');
 
 // CLI Args
 const url = argv.url || 'https://www.google.com';
@@ -11,37 +12,41 @@ const delay = argv.delay || 0;
 const userAgent = argv.userAgent;
 const fullPage = argv.full;
 
-// Start the Chrome Debugging Protocol
-CDP(async function(client) {
-  // Extract used DevTools domains.
-  const {DOM, Emulation, Network, Page, Runtime} = client;
+init();
 
-  // Enable events on domains we are interested in.
-  await Page.enable();
-  await DOM.enable();
-  await Network.enable();
+async function init() {
+  try {
+    // Start the Chrome Debugging Protocol
+    const client = await CDP();
+    // Extract used DevTools domains.
+    const {DOM, Emulation, Network, Page, Runtime} = client;
 
-  // If user agent override was specified, pass to Network domain
-  if (userAgent) {
-    await Network.setUserAgentOverride({userAgent});
-  }
+    // Enable events on domains we are interested in.
+    await Page.enable();
+    await DOM.enable();
+    await Network.enable();
 
-  // Set up viewport resolution, etc.
-  const deviceMetrics = {
-    width: viewportWidth,
-    height: viewportHeight,
-    deviceScaleFactor: 0,
-    mobile: false,
-    fitWindow: false,
-  };
-  await Emulation.setDeviceMetricsOverride(deviceMetrics);
-  await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
+    // If user agent override was specified, pass to Network domain
+    if (userAgent) {
+      await Network.setUserAgentOverride({userAgent});
+    }
 
-  // Navigate to target page
-  await Page.navigate({url});
+    // Set up viewport resolution, etc.
+    const deviceMetrics = {
+      width: viewportWidth,
+      height: viewportHeight,
+      deviceScaleFactor: 0,
+      mobile: false,
+      fitWindow: false,
+    };
+    await Emulation.setDeviceMetricsOverride(deviceMetrics);
+    await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
 
-  // Wait for page load event to take screenshot
-  Page.loadEventFired(async () => {
+    // Navigate to target page
+    await Page.navigate({url});
+
+    // Wait for page load event to take screenshot
+    await Page.loadEventFired();
     // If the `full` CLI option was passed, we need to measure the height of
     // the rendered page and use Emulation.setVisibleSize
     if (fullPage) {
@@ -58,19 +63,14 @@ CDP(async function(client) {
       await Emulation.forceViewport({x: 0, y: 0, scale: 1});
     }
 
-    setTimeout(async function() {
-      const screenshot = await Page.captureScreenshot({format});
-      const buffer = new Buffer(screenshot.data, 'base64');
-      file.writeFile('output.png', buffer, 'base64', function(err) {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log('Screenshot saved');
-        }
-        client.close();
-      });
-    }, delay);
-  });
-}).on('error', err => {
-  console.error('Cannot connect to browser:', err);
-});
+    await timeout(delay);
+    const screenshot = await Page.captureScreenshot({format});
+    const buffer = new Buffer(screenshot.data, 'base64');
+    await file.writeFile('output.png', buffer, 'base64');
+    console.log('Screenshot saved');
+    client.close();
+  }
+  catch(err) {
+    console.error('Cannot connect to browser:', err);
+  }
+}
