@@ -25,7 +25,7 @@ sudo apt-get install -y nodejs
 # Run Chrome as background process
 # https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
 # --disable-gpu currently required, see link above
-google-chrome --headless --remote-debugging-port=9222 --disable-gpu &
+google-chrome --headless --hide-scrollbars --remote-debugging-port=9222 --disable-gpu &
 
 # Take the screenshot
 nodejs index.js --url="http://www.eff.org"
@@ -35,6 +35,6 @@ The screenshot will then be available as *output.png*
 
 ### Other Resources
 
+- [Getting Started with Headless Chrome](https://developers.google.com/web/updates/2017/04/headless-chrome#screenshots)
 - [Headless Chromium](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md)
 - [Chrome Debugging Protocol Viewer](https://chromedevtools.github.io/debugger-protocol-viewer/tot/)
-
