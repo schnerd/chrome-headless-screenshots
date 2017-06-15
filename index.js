@@ -51,6 +51,9 @@ async function init() {
 
     // Wait for page load event to take screenshot
     await Page.loadEventFired();
+
+    await timeout(delay);
+
     // If the `full` CLI option was passed, we need to measure the height of
     // the rendered page and use Emulation.setVisibleSize
     if (fullPage) {
@@ -67,7 +70,6 @@ async function init() {
       await Emulation.forceViewport({x: 0, y: 0, scale: 1});
     }
 
-    await timeout(delay);
     const screenshot = await Page.captureScreenshot({format});
     const buffer = new Buffer(screenshot.data, 'base64');
     await file.writeFile(output, buffer, 'base64');
