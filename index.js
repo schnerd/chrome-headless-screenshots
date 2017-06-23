@@ -2,7 +2,7 @@ const CDP = require('chrome-remote-interface');
 const argv = require('minimist')(process.argv.slice(2));
 const file = require('mz/fs');
 const timeout = require('delay');
-
+const chromeLauncher = require('lighthouse/chrome-launcher/chrome-launcher');
 // CLI Args
 const url = argv.url || 'https://www.google.com';
 const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
@@ -13,10 +13,22 @@ const userAgent = argv.userAgent;
 const fullPage = argv.full;
 const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 
-init();
+async function launchChrome(headless = true) {
+  return await chromeLauncher.launch({
+    port: 9222, // Uncomment to force a specific port of your choice.
+    chromeFlags: [     
+      '--disable-gpu',
+      '--hide-scrollbars',
+      headless ? '--headless' : ''
+    ]
+  });
+}
+launchChrome(true).then(chrome => {
+  init(chrome);
+});
 
-async function init() {
-  try {
+async function init(chrome) {
+  try {  
     // Start the Chrome Debugging Protocol
     const client = await CDP();
     // Extract used DevTools domains.
@@ -75,6 +87,7 @@ async function init() {
     await file.writeFile(output, buffer, 'base64');
     console.log('Screenshot saved');
     client.close();
+    chrome.kill();
   } catch (err) {
     console.error('Exception while taking screenshot:', err);
   }
