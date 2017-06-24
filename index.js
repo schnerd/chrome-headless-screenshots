@@ -15,7 +15,7 @@ const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 
 async function launchChrome(headless = true) {
   return await chromeLauncher.launch({
-    port: 9222, // Uncomment to force a specific port of your choice.
+   // port: 9222,
     chromeFlags: [     
       '--disable-gpu',
       '--hide-scrollbars',
@@ -23,14 +23,15 @@ async function launchChrome(headless = true) {
     ]
   });
 }
-launchChrome(true).then(chrome => {
-  init(chrome);
+launchChrome(true).then(chrome_proc => {
+  init(chrome_proc);
 });
 
-async function init(chrome) {
+async function init(chrome_proc) {
   try {  
     // Start the Chrome Debugging Protocol
-    const client = await CDP();
+    const client = await CDP({'host': 'localhost', 'port': chrome_proc["port"]});
+   
     // Extract used DevTools domains.
     const {DOM, Emulation, Network, Page, Runtime} = client;
 
@@ -87,7 +88,7 @@ async function init(chrome) {
     await file.writeFile(output, buffer, 'base64');
     console.log('Screenshot saved');
     client.close();
-    chrome.kill();
+    chrome_proc.kill();
   } catch (err) {
     console.error('Exception while taking screenshot:', err);
   }
