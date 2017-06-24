@@ -20,11 +20,6 @@ sudo apt-get install -f
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Run Chrome as background process
-# https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-# --disable-gpu currently required, see link above
-google-chrome --headless --hide-scrollbars --remote-debugging-port=9222 --disable-gpu &
-
 # Take the screenshot
 node index.js --url="http://www.eff.org"
 ```

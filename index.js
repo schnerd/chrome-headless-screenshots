@@ -2,7 +2,7 @@ const CDP = require('chrome-remote-interface');
 const argv = require('minimist')(process.argv.slice(2));
 const file = require('mz/fs');
 const timeout = require('delay');
-
+const chromeLauncher = require('lighthouse/chrome-launcher/chrome-launcher');
 // CLI Args
 const url = argv.url || 'https://www.google.com';
 const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
@@ -13,12 +13,25 @@ const userAgent = argv.userAgent;
 const fullPage = argv.full;
 const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 
-init();
+async function launchChrome(headless = true) {
+  return await chromeLauncher.launch({
+   // port: 9222,
+    chromeFlags: [     
+      '--disable-gpu',
+      '--hide-scrollbars',
+      headless ? '--headless' : ''
+    ]
+  });
+}
+launchChrome(true).then(chrome_proc => {
+  init(chrome_proc);
+});
 
-async function init() {
-  try {
+async function init(chrome_proc) {
+  try {  
     // Start the Chrome Debugging Protocol
-    const client = await CDP();
+    const client = await CDP({'host': 'localhost', 'port': chrome_proc["port"]});
+   
     // Extract used DevTools domains.
     const {DOM, Emulation, Network, Page, Runtime} = client;
 
@@ -75,6 +88,7 @@ async function init() {
     await file.writeFile(output, buffer, 'base64');
     console.log('Screenshot saved');
     client.close();
+    chrome_proc.kill();
   } catch (err) {
     console.error('Exception while taking screenshot:', err);
   }
