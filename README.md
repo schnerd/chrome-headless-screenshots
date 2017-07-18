@@ -6,7 +6,7 @@ Contributions are welcome.
 
 ### Setup
 
-The setup below was used on a [Vagrant](https://www.vagrantup.com/) running Ubuntu 14 Trusty Tahr. It assumes you've already cloned the repo and run `npm install`.
+The setup below was used on a [Vagrant](https://www.vagrantup.com/) running Ubuntu 14 Trusty Tahr. It assumes you've already cloned the repo.
 
 ```sh
 # Install Google Chrome
@@ -17,8 +17,9 @@ sudo dpkg -i google-chrome*.deb  # Might show "errors", fixed by next line
 sudo apt-get install -f
 
 # Install Node Stable (v8)
+sudo apt-get install python-software-properties
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
+sudo apt-get install -y nodejs npm
 
 # Run Chrome as background process
 # https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
@@ -26,6 +27,7 @@ sudo apt-get install -y nodejs
 google-chrome --headless --hide-scrollbars --remote-debugging-port=9222 --disable-gpu &
 
 # Take the screenshot
+npm install
 node index.js --url="http://www.eff.org"
 ```
 
