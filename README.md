@@ -1,10 +1,12 @@
 ## Using headless Chrome as an automated screenshot tool
 
-This repo contains an example implementation of using headless Chrome as an automated screenshot tool on linux, which is a common use case for PhantomJS.
+This repo contains an example implementation of using headless Chrome as an automated screenshot tool on linux, which is a common use case for PhantomJS. Contributions are welcome.
 
-Contributions are welcome.
+### Chrome Version
 
-### Setup
+Headless Chrome is still new and unstable, and the API changes with each new major Chrome version. Our master branch is currently targeting **Chrome 60**–the current stable Chrome version. You may need to modify the script if you wish to target another version.
+
+### Setup on Linux
 
 The setup below was used on a [Vagrant](https://www.vagrantup.com/) running Ubuntu 14 Trusty Tahr. It assumes you've already cloned the repo and run `npm install`.
 
@@ -30,6 +32,18 @@ node index.js --url="http://www.eff.org"
 ```
 
 The screenshot will then be available as *output.png*
+
+### Setup on OSX
+
+Headless Chrome is still highly unstable on OSX (see issue [#1](https://github.com/schnerd/chrome-headless-screenshots/issues/1)). At this point in time I recommend just running Chrome & Node in docker or vagrant (Dokerfile/Vagrant pull requests welcome).
+
+If you must run it natively, use the following commands:
+```
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --remote-debugging-port=9222 --disable-gpu
+node index.js --url="http://www.eff.org"
+```
+
+If screenshots on Mac do not appear to be working, please report an issue on [ChromeDevTools/devtools-protocol](https://github.com/ChromeDevTools/devtools-protocol), [cyrus-and/chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface), or chromium itself.
 
 ### Other Resources
 
