@@ -35,7 +35,7 @@ The screenshot will then be available as *output.png*
 
 ### Setup on OSX
 
-Headless Chrome is still highly unstable on OSX (see issue [#1](https://github.com/schnerd/chrome-headless-screenshots/issues/1)). At this point in time I recommend just running Chrome & Node in docker or vagrant (Dokerfile/Vagrant pull requests welcome).
+Headless Chrome is still highly unstable on OSX (see issue [#1](https://github.com/schnerd/chrome-headless-screenshots/issues/1)). At this point in time I recommend just running chrome & node in docker or vagrant (Dokerfile/Vagrantfile pull requests welcome).
 
 If you must run it natively, use the following commands:
 ```
