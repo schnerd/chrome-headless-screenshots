@@ -11,6 +11,7 @@ let viewportHeight = argv.viewportHeight || 900;
 const delay = argv.delay || 0;
 const userAgent = argv.userAgent;
 const fullPage = argv.full;
+const outputDir = argv.outputDir || './';
 const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 
 init();
@@ -90,7 +91,8 @@ async function init() {
     });
 
     const buffer = new Buffer(screenshot.data, 'base64');
-    await file.writeFile(output, buffer, 'base64');
+    const path = `${outputDir + output}`;
+    await file.writeFile(path, buffer, 'base64');
     console.log('Screenshot saved');
     client.close();
   } catch (err) {
