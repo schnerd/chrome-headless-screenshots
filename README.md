@@ -35,7 +35,7 @@ The screenshot will then be available as *output.png*
 
 ### Setup on OSX
 
-Headless Chrome is still highly unstable on OSX (see issue [#1](https://github.com/schnerd/chrome-headless-screenshots/issues/1)). At this point in time I recommend just running chrome & node in docker or vagrant (Dokerfile/Vagrantfile pull requests welcome).
+Headless Chrome is still highly unstable on OSX (see issue [#1](https://github.com/schnerd/chrome-headless-screenshots/issues/1)). At this point in time I recommend just running chrome & node in docker or vagrant (Vagrantfile pull requests welcome).
 
 If you must run it natively, use the following commands:
 ```
@@ -44,6 +44,26 @@ node index.js --url="http://www.eff.org"
 ```
 
 If screenshots on Mac do not appear to be working, please report an issue on [ChromeDevTools/devtools-protocol](https://github.com/ChromeDevTools/devtools-protocol), [cyrus-and/chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface), or chromium itself.
+
+### Setup on Docker
+
+Build image:
+```
+docker build -t chrome-headless-screenshots-app .
+```
+
+Run container, saving output in local dir in the file output.png:
+```
+docker run -it -v ${PWD}:/var/output/ --rm chrome-headless-screenshots-app --url="http://www.eff.org"
+```
+
+Note that for newer versions of docker, you may see an error like:
+
+```
+libudev: udev_has_devtmpfs: name_to_handle_at on /dev: Operation not permitted
+```
+
+This appears to be harmless, and is caused by Chrome attempting to use /dev/shm for caching, which is more restricted in later versions of docker. If you really want to get rid of the warning then you can either dig a bit further to put together a seccomp file for chrome (see https://docs.docker.com/engine/security/seccomp/#significant-syscalls-blocked-by-the-default-profile for a start), or use `--security-opt seccomp:unconfined` but note that this is *not recommended* ("seccomp is instrumental for running Docker containers with least privilege. It is not recommended to change the default seccomp profile."). For now, we recommend just living with the warning.
 
 ### Other Resources
 
