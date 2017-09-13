@@ -43,7 +43,7 @@ async function init() {
     }
 
     // Set up viewport resolution, etc.
-    const deviceMetrics = {
+    let deviceMetrics = {
       width: viewportWidth,
       height: viewportHeight,
       deviceScaleFactor: 0,
@@ -65,7 +65,7 @@ async function init() {
     await timeout(delay);
 
     // If the `full` CLI option was passed, we need to measure the height of
-    // the rendered page and use Emulation.setVisibleSize
+    // the rendered page and call setDeviceMetricsOverride + setVisibleSize again
     if (fullPage) {
       const {root: {nodeId: documentNodeId}} = await DOM.getDocument();
       const {nodeId: bodyNodeId} = await DOM.querySelector({
@@ -73,12 +73,11 @@ async function init() {
         nodeId: documentNodeId,
       });
       const {model} = await DOM.getBoxModel({nodeId: bodyNodeId});
-      viewportHeight = model.height;
 
+      viewportHeight = model.height;
+      deviceMetrics.height = viewportHeight;
+      await Emulation.setDeviceMetricsOverride(deviceMetrics);
       await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
-      // This forceViewport call ensures that content outside the viewport is
-      // rendered, otherwise it shows up as grey. Possibly a bug?
-      await Emulation.forceViewport({x: 0, y: 0, scale: 1});
     }
 
     const screenshot = await Page.captureScreenshot({
