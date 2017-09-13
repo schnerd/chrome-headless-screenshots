@@ -1,3 +1,7 @@
+**Note:** The Chrome team recently released [puppeteer](https://github.com/GoogleChrome/puppeteer), which is likely the best solution for headless chrome screenshots at this point. Please consider trying out puppeteer before diving in below, as this repo may become unmaintained in the future.
+
+---
+
 ## Using headless Chrome as an automated screenshot tool
 
 This repo contains an example implementation of using headless Chrome as an automated screenshot tool on linux, which is a common use case for PhantomJS. Contributions are welcome.
