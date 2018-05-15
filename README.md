@@ -1,4 +1,4 @@
-**9/12/2017 Note:** The Chrome team recently released [puppeteer](https://github.com/GoogleChrome/puppeteer), which is likely the best solution for headless chrome screenshots at this point. Please consider trying out puppeteer before diving in below, as this repo may become unmaintained in the future.
+**9/12/2017 Note:** The Chrome team recently released [puppeteer](https://github.com/GoogleChrome/puppeteer), which is likely the best solution for headless chrome screenshots at this point. Please try out puppeteer before diving in below, as this repo is no longer maintained and may not work with the latest versions of Chrome.
 
 ---
 
@@ -8,7 +8,7 @@ This repo contains an example implementation of using headless Chrome as an auto
 
 ### Chrome Version
 
-Headless Chrome is still new and unstable, and the API changes with each new major Chrome version. Our master branch is currently targeting **Chrome 60**–the current stable Chrome version. You may need to modify the script if you wish to target another version.
+Headless Chrome is still new and unstable, and the API changes with each new major Chrome version. Our master branch is currently targeting **Chrome 60**. You may need to modify the script if you wish to target another version.
 
 ### Setup on Linux
 
