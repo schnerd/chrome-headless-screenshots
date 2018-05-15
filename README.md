@@ -1,4 +1,4 @@
-**5/15/2018** The Chrome team has released [Puppeteer](https://github.com/GoogleChrome/puppeteer), which makes much of the code in this repository obsolete. As such, this project is no longer maintained and issues have been disabled. Please check out Puppeteer.
+**May 2018** The Chrome team has released [Puppeteer](https://github.com/GoogleChrome/puppeteer), which makes much of the code in this repository obsolete. As such, this project is no longer maintained and issues have been disabled. Please check out Puppeteer.
 
 ---
 
